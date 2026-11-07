@@ -1,92 +1,134 @@
-# xiel dashboard v2.1
+![Xiel — shape chaos into clarity. Discord command center.](web/client/public/og.png)
 
-xiel v2.1 runs inside the existing Python Discord bot. FastAPI serves the API and the prebuilt React/Three.js client on port `10300`; MongoDB stores dashboard settings, OAuth sessions, economy records, access grants, and global bans. Socket.IO publishes live status directly from the active discord.py process, so no second Discord gateway connection is created.
+# Angelic Bot · Xiel
 
-The active production runtime does **not** require Node.js. Node is needed only on a development machine when `web/client` is changed and rebuilt.
+**A Discord community toolkit for moderation, games, music, and server management — with a dashboard built in.**
 
-## Active structure
+![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=flat-square&logo=python&logoColor=white)
+![discord.py](https://img.shields.io/badge/discord.py-2.7-5865F2?style=flat-square&logo=discord&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/Dashboard-React-149ECA?style=flat-square&logo=react&logoColor=white)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
 
-```text
-dashboard_api/       FastAPI, MongoDB, OAuth, authorization, and Socket.IO
-cogs/help.py         Dynamic paginated Discord help built from loaded commands
-cogs/web_dashboard.py
-                     Uvicorn host and bot-side dashboard event integration
-web/client/          React/Vite source and committed production build
-web/client/dist/     Files served by FastAPI in production
+[Features](#features) · [Get started](#get-started) · [Dashboard](#dashboard) · [Development](#development) · [Project structure](#project-structure)
+
+---
+
+## Features
+
+| | What’s inside |
+|---|---|
+| 🛡️ **Moderation & protection** | Moderation commands, anti-nuke protections, staff supervision and logs. |
+| 🧩 **Community tools** | Welcome flows, auto roles, private voice channels, ticket sorting and giveaways. |
+| 🎮 **Games & economy** | Multiplayer games, an economy system, games of chance and community activities. |
+| 🎵 **Music & voice** | Music queues, Spotify metadata, YouTube search, audio filters and text-to-speech. |
+| ✨ **More ways to connect** | AI chat, roleplay, AFK status, reminders, translation and utility commands. |
+| 🪐 **Xiel dashboard** | A React dashboard for status, commands, server settings and economy management. |
+
+Availability depends on the bot’s configuration, Discord permissions, and any optional services used by a feature.
+
+## Get started
+
+### Prerequisites
+
+- **Python 3.12+** and `pip`
+- A Discord application and bot token
+- **FFmpeg** on your system `PATH` for voice features
+- MongoDB and Discord OAuth credentials for the full dashboard
+- Node.js **22.22+** only if developing or rebuilding the dashboard
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/ryu-core/angelic-bot.git
+cd angelic-bot
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-Dashboard edits to prefixes, aliases, and AntiNuke settings are synchronized with the bot's existing persistence layer. Welcome/leave messages, join/leave logs, and global-ban enforcement read from MongoDB in the dashboard cog.
+### 2. Configure
 
-## Required configuration
-
-Copy `.env.example` to `.env`, then set at least:
+Copy `.env.example` to `.env` and fill in your own values. For the bot and full dashboard, configure at least:
 
 ```env
 DISCORD_TOKEN=your-bot-token
 DISCORD_CLIENT_ID=your-application-id
 DISCORD_CLIENT_SECRET=your-oauth-secret
-DISCORD_REDIRECT_URI=https://xiel.flagsbot.in/api/auth/callback
-MONGODB_URI=mongodb+srv://user:password@cluster/xiel
+DISCORD_REDIRECT_URI=https://your-domain.example/api/auth/callback
+MONGODB_URI=mongodb+srv://user:password@cluster/your-database
 SESSION_SECRET=a-long-random-secret
-DASHBOARD_PUBLIC_URL=https://xiel.flagsbot.in
+DASHBOARD_PUBLIC_URL=https://your-domain.example
 OWNER_IDS=123456789012345678
 ```
 
-The redirect URI must also be added to the Discord application's OAuth2 redirect list. `OWNER_IDS` and `CO_OWNER_IDS` are the only source of dashboard owner roles.
+Add the redirect URI to your Discord application’s OAuth2 settings. `OWNER_IDS` and `CO_OWNER_IDS` define dashboard owner roles. Other integrations are listed in [`.env.example`](.env.example); configure them only if you use their features.
 
-## Pterodactyl deployment (Python-only)
+> **Keep secrets private.** Never commit your `.env`, bot token, API keys, database credentials or session secret.
 
-1. Use a Python 3.12+ image.
-2. Upload the repository, including the committed `web/client/dist` directory.
-3. Install dependencies with `pip install -r requirements.txt`.
-4. Configure the environment variables above.
-5. Keep the startup command as `python app.py`.
-6. Point the public reverse proxy or Cloudflare tunnel to port `10300`.
+### 3. Start the bot
 
-Successful startup includes:
-
-```text
-Starting dashboard v2.1.0 (FastAPI + React) on port 10300...
-Dashboard v2.1.0 MongoDB, OAuth, and telemetry ready.
+```bash
+python app.py
 ```
 
-When MongoDB or Discord OAuth configuration is missing, the public website, live status, command atlas, and bot invite endpoint still start in public mode. Sign-in and protected management routes remain disabled, and startup lists the missing configuration. Set `MONGODB_URI`, `DISCORD_CLIENT_SECRET`, and a stable `SESSION_SECRET`, then restart to enable the full dashboard.
+The default command prefix is `,` and can be configured with `PREFIX`. The dashboard is served on port **10300** by default. Set up the appropriate Discord intents and permissions for the features you enable.
 
-If startup says `web/client/dist is missing`, upload the prebuilt directory. Node.js is not installed or launched on Pterodactyl.
+## Dashboard
 
-## Local development
+Xiel runs inside the bot process: FastAPI serves the API and the prebuilt React client, MongoDB stores dashboard data, and Socket.IO streams live status. There is no second Discord gateway connection.
 
-Install Python packages and frontend dependencies:
+The prebuilt client in `web/client/dist/` is included, so a production deployment does **not** need Node.js. Without MongoDB or Discord OAuth configuration, the public site and public endpoints can start, but sign-in and protected management routes stay disabled.
 
-```text
-pip install -r requirements.txt
+### Pterodactyl / production
+
+1. Use a Python 3.12+ image and include `web/client/dist/` when deploying.
+2. Install `requirements.txt` and configure your environment variables.
+3. Start with `python app.py`.
+4. Point your reverse proxy or tunnel to port `10300` (or your configured `DASHBOARD_PORT`).
+5. Use HTTPS and a stable `SESSION_SECRET` for dashboard sessions.
+
+### API at a glance
+
+- **Public:** `/api/health`, `/api/status`, `/api/commands`, `/api/invite`
+- **Authentication:** `/api/auth/discord`, `/api/auth/callback`, `/api/auth/me`, `/api/auth/logout`
+- **Server management:** `/api/servers`, `/api/settings/{guildId}`, `/api/economy/{guildId}/overview`
+- **Privileged controls:** `/api/owner/*` and `/api/coowner/*`
+
+Discord OAuth requests `identify` and `guilds`. Server settings and economy routes require Manage Server permission and the bot’s presence in the server. Owner commands are not exposed to normal users.
+
+## Development
+
+To work on the dashboard, install frontend dependencies from the repository root:
+
+```bash
 npm install
+npm run dev
 ```
 
-Use `npm run dev` to start the Python bot/API and Vite together. Vite runs on `http://localhost:5173` and proxies `/api` and `/socket.io` to port `10300`.
+Vite runs at `http://localhost:5173` and proxies `/api` and `/socket.io` to the bot on port `10300`. After changing the frontend, rebuild and commit the production client:
 
-After frontend changes, run `npm run build` and commit/upload `web/client/dist`. Production continues to use `python app.py`.
+```bash
+npm run build
+npm run check
+```
 
-Validation commands:
+The `check` script runs the Python compilation check and the client’s lint, unit test, build and bundle checks. It does not replace testing with your own Discord application and service configuration.
+
+## Project structure
 
 ```text
-npm run check
-python -m compileall -q dashboard_api cogs/web_dashboard.py cogs/help.py
+app.py                 Bot entry point and extension loading
+config.py              Environment-based configuration
+cogs/                  Discord commands, listeners and dashboard host
+utils/                 Shared helpers, persistence and feature logic
+database/              Database models
+dashboard_api/         FastAPI routes, OAuth, authorization and Socket.IO
+web/client/            React/Vite dashboard source
+web/client/dist/       Prebuilt dashboard served in production
+assets/                Bot assets
 ```
 
-## Authorization and API
+---
 
-Discord OAuth requests `identify guilds`. Settings and economy routes require the user's `Manage Server` permission and require xiel to be present in that guild. Co-owners can manage premium/profile grants; only owners can manage global bans or make the bot leave a server.
-
-Primary routes:
-
-- `GET /api/health`, `/api/status`, `/api/commands`, `/api/invite`
-- `/api/auth/discord`, `/api/auth/callback`, `/api/auth/me`, `/api/auth/logout`
-- `GET /api/servers`
-- `GET|PATCH /api/settings/{guildId}` and alias create/delete routes
-- `/api/economy/{guildId}/overview`, wallet correction, and shop CRUD
-- `/api/owner/*` and `/api/coowner/*`
-
-Payloads are validated with Pydantic. API failures use `{ "error": { "code", "message", "details" } }`. OAuth sessions are opaque, HTTP-only, seven-day MongoDB sessions. HTTPS deployments receive secure cookies and all responses receive security headers and a restrictive content security policy.
-
-`/api/commands` introspects the commands currently loaded in discord.py, including prefix commands, slash commands, groups, aliases, categories, syntax, and restrictions. Owner commands are never exposed to normal users.
+**Built for communities that want a little more clarity and a lot more control.**
