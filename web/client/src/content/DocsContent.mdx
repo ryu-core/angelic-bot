@@ -1,0 +1,59 @@
+<section id="start">
+
+## Getting started
+
+Invite xiel with the Add to Server button, authorize the requested bot and application-command scopes, then sign into this dashboard. Servers appear only when xiel is present and your Discord account has Manage Server.
+
+The registry currently exposes <code>{props.total == null ? 'unavailable' : `${props.total} commands`}</code>. The default prefix is <code>,</code> unless changed in Server Settings.
+
+</section>
+
+<section id="antinuke">
+
+## AntiNuke
+
+AntiNuke watches destructive audit-log actions and evaluates them against module thresholds. Configure modules independently, select a punishment, provide a log channel, and whitelist automation that should bypass enforcement.
+
+Current security command surface: <code>{props.counts == null ? 'unavailable' : `${props.counts.Security || 0} commands`}</code>.
+
+</section>
+
+<section id="join">
+
+## Join flow
+
+Welcome and leave messages support <code>{'{user}'}</code>, <code>{'{username}'}</code>, <code>{'{server}'}</code>, and <code>{'{count}'}</code>. Set channel IDs, enable each flow, and configure separate invite-log destinations.
+
+</section>
+
+<section id="access">
+
+## Access & whitelist
+
+Admins can manage protection settings. Whitelisted IDs bypass AntiNuke enforcement. Trusted IDs are intended for users allowed to add or operate approved bots. Every ID is validated as a Discord snowflake before it is saved.
+
+</section>
+
+<section id="family">
+
+## Marriage & family
+
+The marriage system covers proposals, divorce, adoption, family trees, connected graphs, anniversaries, and leaderboards. Current family command surface: <code>{props.counts == null ? 'unavailable' : `${props.counts.Marriage || 0} commands`}</code>.
+
+</section>
+
+<section id="economy">
+
+## Economy
+
+Each server has isolated wallets and shop inventory in MongoDB. Manage Server permission is required to correct balances or alter shop items. Current economy command surface: <code>{props.counts == null ? 'unavailable' : `${props.counts.Economy || 0} commands`}</code>.
+
+</section>
+
+<section id="consoles">
+
+## Owner & co-owner consoles
+
+Access is checked on the server against <code>OWNER_IDS</code> and <code>CO_OWNER_IDS</code>. Co-owners may manage premium and profile grants. Only owners can create global bans or make the bot leave a server.
+
+</section>
