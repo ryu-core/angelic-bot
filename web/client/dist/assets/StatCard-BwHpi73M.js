@@ -1,0 +1,1 @@
+import{j as s}from"./index-6VnumhLe.js";function e({label:t,value:a,detail:r,tone:n="frost"}){return s.jsxs("article",{className:`stat-card ${n}`,children:[s.jsx("span",{children:t}),s.jsx("strong",{children:a??"—"}),r&&s.jsx("small",{children:r})]})}export{e as S};
