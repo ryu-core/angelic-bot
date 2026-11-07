@@ -1,0 +1,57 @@
+import PublicLegalPage from "../components/PublicLegalPage.jsx";
+
+const sections = [
+  {
+    id: "agreement-and-scope",
+    title: "Agreement and scope",
+    body: "These terms govern access to the xiel Discord bot and web dashboard. By using either surface, you agree to follow these terms and the Discord rules that apply to your account and servers. If you do not agree, do not use xiel.",
+  },
+  {
+    id: "authority-and-access",
+    title: "Authority and account access",
+    body: "Use management features only for communities you are authorized to administer. Dashboard permissions are derived from the signed-in Discord account, and privileged owner or co-owner access is checked by the server. You are responsible for activity performed through your account.",
+  },
+  {
+    id: "acceptable-use",
+    title: "Acceptable use",
+    body: "Do not use moderation, automation, AI, economy, or community features to harass users, facilitate unlawful activity, evade Discord policies, probe or bypass access controls, disrupt the service, or interfere with another community. Do not submit content or configuration you are not permitted to use.",
+  },
+  {
+    id: "administrator-responsibility",
+    title: "Administrator responsibility",
+    body: "Server administrators are responsible for their configuration, access and whitelist decisions, economy adjustments, automated actions, and activity performed through privileged consoles. Review high-impact changes before confirming them and grant dashboard access only to trusted users.",
+  },
+  {
+    id: "discord-dependencies",
+    title: "Discord and external dependencies",
+    body: "xiel relies on Discord authentication, permissions, gateway events, and APIs, as well as the infrastructure that runs the bot and dashboard. Discord policy or API changes, account restrictions, network failures, and provider interruptions can affect functionality.",
+  },
+  {
+    id: "availability",
+    title: "Service availability and changes",
+    body: "Features may be changed, limited, or temporarily unavailable for security, maintenance, Discord API changes, abuse prevention, or infrastructure failures. The status page displays current telemetry when that data is available, but it is not a guarantee of uninterrupted service.",
+  },
+  {
+    id: "enforcement",
+    title: "Enforcement",
+    body: "Access may be restricted or removed when reasonably necessary to protect users, communities, or the service; investigate misuse; enforce these terms; or comply with Discord requirements and applicable obligations.",
+  },
+  {
+    id: "administrator-judgment",
+    title: "Operational judgment",
+    body: "Automation and moderation tools support, but do not replace, administrator judgment. You remain responsible for reviewing configuration, monitoring results, correcting mistakes, and deciding whether xiel is appropriate for a particular server workflow.",
+  },
+  {
+    id: "changes-to-terms",
+    title: "Changes to these terms",
+    body: "These terms may be updated as xiel and its operating requirements change. The date shown at the top identifies the current version; review this page periodically if you continue using the service.",
+  },
+];
+
+export default function TermsPage() {
+  return <PublicLegalPage
+    title="Terms of service"
+    description="Conditions for using xiel and its dashboard. Last updated 30 July 2026."
+    sections={sections}
+  />;
+}
