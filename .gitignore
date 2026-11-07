@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+/dist/
+build/
+
+# Environment
+.env
+node_modules/
+/dist/
+coverage/
+playwright-report/
+test-results/
+*.log
+.DS_Store
+.venv
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database files - KEEP STRUCTURE
+database.db
+data/*.json
+data/*.db
+!data/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+
+# Flask session files
+flask_session/
+
+# Runtime and credentials
+.env.*
+!.env.example
+*.db
+*.sqlite*
+flask_session/
+
+# This dashboard serves the prebuilt client in production.
+!web/client/dist/
+!web/client/dist/**
