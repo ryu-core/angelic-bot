@@ -1,0 +1,17 @@
+{
+  "name": "xiel-dashboard-monorepo",
+  "private": true,
+  "version": "2.1.0",
+  "workspaces": ["web/client"],
+  "scripts": {
+    "dev": "concurrently -n python,client -c magenta,blue \"python app.py\" \"npm run dev -w @xiel/client\"",
+    "dev:client": "npm run dev -w @xiel/client",
+    "build": "npm run build -w @xiel/client",
+    "start": "python app.py",
+    "check:python": "python -m compileall -q dashboard_api cogs/web_dashboard.py cogs/help.py",
+    "check": "npm run check:python && npm run check -w @xiel/client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
